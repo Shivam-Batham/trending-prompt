@@ -1,8 +1,7 @@
-
 export default function Home() {
   return (
-   <>
-   Landing Page
-   </>
+    <>
+      <h1 className="text-center text-4xl">Landing Page</h1>
+    </>
   );
 }
