@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Trending prompts for images",
-  description: "Trending prompts for AI image generation models like Gimini, ChatGpt and Grok"
+  description:
+    "Trending prompts for AI image generation models like Gimini, ChatGpt and Grok",
 };
 
 export default function RootLayout({
@@ -27,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );
