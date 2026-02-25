@@ -37,16 +37,13 @@ export default function SignUpComponent() {
 
   const onSubmit = async (data: LoginFormValues) => {
     await dispatch(registerUser(data));
-    router.replace('/login');
+    router.replace("/login");
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex min-h-screen text-black"
-      >
-        <div className=" w-full px-3 lg:px-10 py-20 lg:py-43.5 space-y-2 bg-white shadow-md">
+    <div className="h-full flex flex-1">
+      <form onSubmit={handleSubmit(onSubmit)} className="lg:w-1/2  text-black">
+        <div className="flex flex-col  justify-center w-full px-3 lg:px-10 h-screen space-y-2 bg-white shadow-md">
           <div>
             <h2 className="font-medium text-5xl lg:text-6xl font-serif italic leading-[100%] tracking-tight mb-2">
               Welcome back
@@ -61,8 +58,7 @@ export default function SignUpComponent() {
 
           <div className="bg-[#D9D9D9] h-10 flex items-center justify-center rounded-full  text-black text-center">
             <div className="flex justify-center items-center gap-2">
-               <FcGoogle size={20} /> Continue
-              with Google
+              <FcGoogle size={20} /> Continue with Google
             </div>
           </div>
 
@@ -83,9 +79,7 @@ export default function SignUpComponent() {
               className="bg-[#D9D9D9] px-4  h-10 w-full flex items-center justify-center rounded-full text-black  focus:outline-none focus:ring focus:ring-gray-400"
             />
             {errors.name && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.name.message}
-              </p>
+              <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
             )}
           </div>
 
@@ -129,26 +123,24 @@ export default function SignUpComponent() {
             {loading ? "Sign up..." : "Register"}
           </button>
           <div className="flex justify-between text-xs lg:text-sm py-4">
-            <Link href={'/login'}>Already have an Account ? Login</Link>
-            <Link href={'/forgot-password'}>forgot password?</Link>
-          </div>
-        </div>
-
-        <div className="hidden lg:block bg-[#111111] text-white w-full px-8.5">
-          <div className="h-[80%]"></div>
-          <div>
-            <h1 className="font-normal text-6xl font-serif italic">
-              Trending Prompt
-            </h1>
-            <p>
-              Discover trending AI prompts crafted to boost creativity,
-              productivity, and results. Explore ready-to-use prompts for
-              ChatGPT, Midjourney, coding, marketing, design, and more—all in
-              one place.
-            </p>
+            <Link href={"/login"}>Already have an Account ? Login</Link>
+            <Link href={"/forgot-password"}>forgot password?</Link>
           </div>
         </div>
       </form>
+      <div className="hidden lg:flex bg-[#111111] text-white w-1/2 px-8.5">
+        <div className=""></div>
+        <div className="self-end pb-6">
+          <h1 className="font-normal text-6xl font-serif italic">
+            Trending Prompt
+          </h1>
+          <p>
+            Discover trending AI prompts crafted to boost creativity,
+            productivity, and results. Explore ready-to-use prompts for ChatGPT,
+            Midjourney, coding, marketing, design, and more—all in one place.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

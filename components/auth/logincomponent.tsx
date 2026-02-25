@@ -40,26 +40,26 @@ export default function LoginComponent() {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex min-h-screen text-black"
-      >
-        <div className="hidden lg:block bg-[#111111] text-white w-full px-8.5">
-          <div className="h-[80%]"></div>
-          <div>
+    <div className="h-full flex flex-1">
+      <div className="w-1/2 hidden lg:flex bg-[#111111] text-white  px-8.5 ">
+          <div className=""></div>
+          <div className="self-end pb-6">
             <h1 className="font-normal text-6xl font-serif italic">
               Trending Prompt
             </h1>
             <p>
               Discover trending AI prompts crafted to boost creativity,
               productivity, and results. Explore ready-to-use prompts for
-              ChatGPT, Midjourney, coding, marketing, design, and more—all in
+              ChatGPT, Midjourney, coding, marketing, design, and more — all in
               one place.
             </p>
           </div>
         </div>
-        <div className=" w-full px-3 lg:px-10 py-20 lg:py-43.5 space-y-2 bg-white shadow-md">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="lg:w-1/2  text-black"
+      >
+        <div className="h-screen  px-3 flex flex-col justify-center lg:px-10 space-y-2 bg-white shadow-md">
           <div>
             <h2 className="font-medium text-5xl lg:text-6xl font-serif italic leading-[100%] tracking-tight mb-2">
               Welcome back
