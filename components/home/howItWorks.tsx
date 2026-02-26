@@ -2,14 +2,14 @@ import { Search } from "lucide-react";
 
 export default function HowItWorks() {
   return (
-    <div className="bg-[#0C0C0C] px-16 py-5">
-      <div className="flex flex-col justify-center items-center">
+    <div className="bg-[#0C0C0C] px-4 lg:px-16 py-5">
+      <div className="flex  flex-col lg:justify-center  lg:items-center">
         <h1 className="text-[32px] italic">How It's Works</h1>
         <p>Get started in seconds.</p>
       </div>
 
-      <div className="flex items-center justify-between py-5">
-        <div className="border bg-[#010101] border-neutral-800 p-4 w-80 rounded-xl space-y-3">
+      <div className="  flex flex-col lg:flex-row gap-2 items-center justify-between  py-5">
+        <div className="border bg-[#010101] border-neutral-800 p-4 lg:w-80 rounded-xl space-y-3">
           <div className="p-2 bg-[#272727] rounded-lg w-fit">
             <Search />
           </div>
@@ -20,7 +20,7 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="border bg-[#010101] border-neutral-800 p-4 w-80 rounded-xl space-y-3">
+        <div className="border bg-[#010101] border-neutral-800 p-4 lg:w-80 rounded-xl space-y-3">
           <div className="p-2 bg-[#272727] rounded-lg w-fit">
             <Search />
           </div>
@@ -31,7 +31,7 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="border border-neutral-800 p-4 w-80 rounded-xl space-y-3 bg-[#010101]">
+        <div className="border border-neutral-800 p-4 lg:w-80 rounded-xl space-y-3 bg-[#010101]">
           <div className="p-2 bg-[#272727] rounded-lg w-fit">
             <Search />
           </div>
@@ -42,7 +42,7 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="border bg-[#010101] border-neutral-800 p-4 w-80 rounded-xl space-y-3">
+        <div className="border bg-[#010101] border-neutral-800 p-4 lg:w-80 rounded-xl space-y-3">
           <div className="p-2 bg-[#272727] rounded-lg w-fit">
             <Search />
           </div>
@@ -55,9 +55,9 @@ export default function HowItWorks() {
       </div>
 
       <div>
-        <div>
+        <div className=" w-full overflow-auto">
           <h2 className="text-[32px] italic">Why Creators Choose us</h2>
-          <p className="w-165">
+          <p className="lg:w-165 text-sm ">
             Stop guessing what works. Our community of 12,000+ creators shares
             their best-performing prompts so you can create content that
             actually engages.
