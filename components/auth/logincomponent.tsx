@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { loginUser } from "@/lib/features/auth/authThunks";
+import { loginUser } from "@/lib/features/auth/authApi";
 import {
   selectAuthLoading,
   selectAuth,

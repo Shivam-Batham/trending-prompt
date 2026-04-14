@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState, User } from "./authTypes";
-import { loginUser, registerUser } from "./authThunks";
+import { loginUser, registerUser } from "./authApi";
 
 const initialState: AuthState = {
   userId: null,
@@ -40,7 +40,6 @@ export const authSlice = createSlice({
         state.loading = false;
         state.userId = action.payload._id;
         state.token = action.payload.token;
-        console.log(action.payload);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
