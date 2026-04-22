@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const SparkleIcon = () => (
   <svg
@@ -43,10 +44,18 @@ const tabs = [
 
 export default function GenerateSearchToggle() {
   const [active, setActive] = useState("generate");
-
+  const router = useRouter();
+  const pathname = usePathname();
   const handleClick = (id: string) => {
     setActive(id);
+   id === "generate" ? router.push("/user/posts/create-post") : router.push("feed");
   };
+
+  useEffect(()=>{
+    if(pathname === "/feed"){
+      setActive("search")
+    }
+  },[])
 
   return (
     <div className="inline-flex items-center bg-zinc-800 rounded-full p-1 gap-0.5">
