@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
-import { useForm } from "react-hook-form";
+import axiosInstance from "@/utils/axiosIntance";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { FieldValues, Path, useForm, UseFormSetValue } from "react-hook-form";
 
 const AI_MODELS = [
   "GPT-4o",
@@ -16,25 +19,25 @@ const AI_MODELS = [
 
 type PostStatus = "active" | "draft" | "deleted";
 
-interface PostFormData {
+interface IpostFormData {
   title: string;
   ai_model: string;
   prompt_text: string;
   prompt_description: string;
-  raw_image: string;
-  prompt_image: string;
+  raw_image: File | null;
+  prompt_image: File | null;
   tags: string[];
   status: PostStatus;
   is_featured: boolean;
 }
 
-const INITIAL_FORM: PostFormData = {
+const INITIAL_FORM: IpostFormData = {
   title: "",
   ai_model: "",
   prompt_text: "",
   prompt_description: "",
-  raw_image: "",
-  prompt_image: "",
+  raw_image: null,
+  prompt_image: null,
   tags: [],
   status: "draft",
   is_featured: false,
@@ -46,45 +49,31 @@ export default function CreatePostForm() {
   const [activeSection, setActiveSection] = useState(0);
   const [tagInput, setTagInput] = useState("");
   const [rawImagePreview, setRawImagePreview] = useState<string | null>(null);
-  const [promptImagePreview, setPromptImagePreview] = useState<string | null>(null);
+  const [promptImagePreview, setPromptImagePreview] = useState<string | null>(
+    null,
+  );
   const rawImageRef = useRef<HTMLInputElement | null>(null);
   const promptImageRef = useRef<HTMLInputElement | null>(null);
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    setValue,
     watch,
-    formState: { isSubmitting },
-  } = useForm<PostFormData>({
+    setValue,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<IpostFormData>({
     defaultValues: INITIAL_FORM,
   });
-
   const form = watch();
-
   const promptRemaining = 1500 - (form.prompt_text?.length ?? 0);
   const descRemaining = 200 - (form.prompt_description?.length ?? 0);
 
-  const onSubmit = async (data: PostFormData) => {
-    // Replace with your actual submit logic
-    console.log("Submitting:", data);
-    await new Promise((r) => setTimeout(r, 1000));
-  };
-
-  const handleImageUpload = (
-    e: ChangeEvent<HTMLInputElement>,
-    field: "raw_image" | "prompt_image"
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setValue(field, result);
-      if (field === "raw_image") setRawImagePreview(result);
-      else setPromptImagePreview(result);
-    };
-    reader.readAsDataURL(file);
+  const removeTag = (tag: string) => {
+    setValue(
+      "tags",
+      form.tags.filter((t) => t !== tag),
+    );
   };
 
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -98,12 +87,52 @@ export default function CreatePostForm() {
     }
   };
 
-  const removeTag = (tag: string) => {
-    setValue("tags", form.tags.filter((t) => t !== tag));
-  };
+ async function onSubmit(data: IpostFormData) {
+  try {
+    console.log(data);
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("ai_model", data.ai_model);
+    formData.append("prompt_text", data.prompt_text);
+    formData.append("prompt_description", data.prompt_description);
+    formData.append("status", data.status);
+    formData.append("is_featured", String(data.is_featured));
+
+    data.tags.forEach((tag) => {
+      formData.append("tags", tag);
+    });
+
+    if (data.raw_image) {
+      formData.append("raw_image", data.raw_image);
+    }
+
+    if (data.prompt_image) {
+      formData.append("prompt_image", data.prompt_image);
+    }
+
+    const response = await axiosInstance.post(
+      "/api/post/create-post",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials:true
+      }
+    );
+ 
+    router.replace("feed");
+  } catch (error) {
+    console.error(error);
+  }
+}
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div
+      className="min-h-screen bg-[#0a0a0f] text-white"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
+    >
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-900/20 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-900/20 rounded-full blur-[100px]" />
@@ -114,16 +143,22 @@ export default function CreatePostForm() {
           <span className="text-xs font-medium tracking-[0.2em] text-violet-400/70 uppercase mb-4 block">
             Prompt Gallery
           </span>
-          <h1 className="text-4xl font-light tracking-tight text-white mb-2" style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}>
+          <h1
+            className="text-4xl font-light tracking-tight text-white mb-2"
+            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+          >
             New Post
           </h1>
-          <p className="text-zinc-500 font-light text-sm">Share your AI prompt with the community</p>
+          <p className="text-zinc-500 font-light text-sm">
+            Share your AI prompt with the community
+          </p>
         </div>
 
         <div className="flex gap-1 mb-10 p-1 bg-white/[0.03] border border-white/[0.06] rounded-xl">
-          {sections.map((s, i) => (
+          {sections.map((step, i) => (
             <button
-              key={s}
+            type="button"
+              key={step}
               onClick={() => setActiveSection(i)}
               className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
                 activeSection === i
@@ -131,13 +166,12 @@ export default function CreatePostForm() {
                   : "text-zinc-600 hover:text-zinc-400"
               }`}
             >
-              {s}
+              {step}
             </button>
           ))}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
           {activeSection === 0 && (
             <div className="space-y-5 animate-in fade-in duration-300">
               <Field label="Title" required>
@@ -154,7 +188,9 @@ export default function CreatePostForm() {
                     <button
                       key={m}
                       type="button"
-                      onClick={() => setValue("ai_model", form.ai_model === m ? "" : m)}
+                      onClick={() =>
+                        setValue("ai_model", form.ai_model === m ? "" : m)
+                      }
                       className={`py-2 px-3 rounded-lg text-xs font-medium transition-all duration-200 border ${
                         form.ai_model === m
                           ? "bg-violet-500/20 border-violet-500/50 text-violet-300"
@@ -192,17 +228,11 @@ export default function CreatePostForm() {
 
           {activeSection === 1 && (
             <div className="space-y-5 animate-in fade-in duration-300">
-              <Field label="Prompt Text" required hint={`${promptRemaining} characters remaining`} hintDanger={promptRemaining < 100}>
-                <textarea
-                  {...register("prompt_text", { required: true, maxLength: 1500 })}
-                  maxLength={1500}
-                  rows={8}
-                  placeholder="Describe your prompt in full detail. Be specific about style, lighting, mood, camera angle…"
-                  className={`${inputCls} resize-none leading-relaxed`}
-                />
-              </Field>
-
-              <Field label="Short Description" hint={`${descRemaining} characters remaining`} hintDanger={descRemaining < 20}>
+              <Field
+                label="Short Description"
+                hint={`${descRemaining} characters remaining`}
+                hintDanger={descRemaining < 20}
+              >
                 <textarea
                   {...register("prompt_description", { maxLength: 200 })}
                   maxLength={200}
@@ -211,26 +241,43 @@ export default function CreatePostForm() {
                   className={`${inputCls} resize-none`}
                 />
               </Field>
+              <Field
+                label="Prompt Text"
+                required
+                hint={`${promptRemaining} characters remaining`}
+                hintDanger={promptRemaining < 100}
+              >
+                <textarea
+                  {...register("prompt_text", {
+                    required: true,
+                    maxLength: 1500,
+                  })}
+                  maxLength={1500}
+                  rows={8}
+                  placeholder="Describe your prompt in full detail. Be specific about style, lighting, mood, camera angle…"
+                  className={`${inputCls} resize-none leading-relaxed`}
+                />
+              </Field>
             </div>
           )}
 
           {activeSection === 2 && (
             <div className="space-y-5 animate-in fade-in duration-300">
               <ImageUpload
+                name="raw_image"
                 label="Raw Output Image"
-                hint="Upload the unedited AI output"
-                preview={rawImagePreview}
+                hint="Upload unedited output"
+                setValue={setValue}
+                value={watch("raw_image")}
                 inputRef={rawImageRef}
-                onChange={(e) => handleImageUpload(e, "raw_image")}
-                onClear={() => { setRawImagePreview(null); setValue("raw_image", ""); }}
               />
               <ImageUpload
-                label="Prompt Reference Image"
-                hint="Optional reference / style image used in the prompt"
-                preview={promptImagePreview}
+                name="prompt_image"
+                label="Prompt Reference"
+                hint="Optional"
+                setValue={setValue}
+                value={watch("prompt_image")}
                 inputRef={promptImageRef}
-                onChange={(e) => handleImageUpload(e, "prompt_image")}
-                onClear={() => { setPromptImagePreview(null); setValue("prompt_image", ""); }}
               />
             </div>
           )}
@@ -243,9 +290,16 @@ export default function CreatePostForm() {
                   onClick={() => document.getElementById("tag-input")?.focus()}
                 >
                   {form.tags.map((tag) => (
-                    <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 bg-violet-500/20 border border-violet-500/30 rounded-full text-xs text-violet-300">
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 bg-violet-500/20 border border-violet-500/30 rounded-full text-xs text-violet-300"
+                    >
                       #{tag}
-                      <button type="button" onClick={() => removeTag(tag)} className="text-violet-400/60 hover:text-violet-200 transition-colors">
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="text-violet-400/60 hover:text-violet-200 transition-colors"
+                      >
                         ×
                       </button>
                     </span>
@@ -255,7 +309,11 @@ export default function CreatePostForm() {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
-                    placeholder={form.tags.length === 0 ? "landscape, cinematic, neon…" : ""}
+                    placeholder={
+                      form.tags.length === 0
+                        ? "landscape, cinematic, neon…"
+                        : ""
+                    }
                     className="bg-transparent outline-none text-sm text-white placeholder-zinc-600 min-w-[120px] flex-1"
                   />
                 </div>
@@ -264,14 +322,18 @@ export default function CreatePostForm() {
               <div className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/[0.08] rounded-xl">
                 <div>
                   <p className="text-sm text-zinc-300">Feature this post</p>
-                  <p className="text-xs text-zinc-600 mt-0.5">Pinned to the top of the gallery</p>
+                  <p className="text-xs text-zinc-600 mt-0.5">
+                    Pinned to the top of the gallery
+                  </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setValue("is_featured", !form.is_featured)}
                   className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${form.is_featured ? "bg-violet-500" : "bg-white/10"}`}
                 >
-                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${form.is_featured ? "translate-x-5" : "translate-x-0"}`} />
+                  <span
+                    className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${form.is_featured ? "translate-x-5" : "translate-x-0"}`}
+                  />
                 </button>
               </div>
             </div>
@@ -289,14 +351,22 @@ export default function CreatePostForm() {
 
             <div className="flex gap-2 items-center">
               {sections.map((_, i) => (
-                <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeSection ? "bg-violet-400 w-4" : "bg-white/15"}`} />
+                <div
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeSection ? "bg-violet-400 w-4" : "bg-white/15"}`}
+                />
               ))}
             </div>
 
             {activeSection < sections.length - 1 ? (
               <button
                 type="button"
-                onClick={() => setActiveSection((s) => Math.min(sections.length - 1, s + 1))}
+                onClick={(e) =>{
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  setActiveSection((s) => Math.min(sections.length - 1, s + 1))
+                }}
                 className="px-5 py-2.5 text-sm text-zinc-300 hover:text-white transition-colors"
               >
                 Next →
@@ -324,7 +394,6 @@ export default function CreatePostForm() {
   );
 }
 
-
 const inputCls =
   "w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.15] focus:border-violet-500/50 focus:bg-white/[0.06] rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all duration-200";
 
@@ -349,7 +418,9 @@ function Field({
           {required && <span className="text-violet-400 ml-1">*</span>}
         </label>
         {hint && (
-          <span className={`text-xs transition-colors ${hintDanger ? "text-amber-400" : "text-zinc-600"}`}>
+          <span
+            className={`text-xs transition-colors ${hintDanger ? "text-amber-400" : "text-zinc-600"}`}
+          >
             {hint}
           </span>
         )}
@@ -359,33 +430,77 @@ function Field({
   );
 }
 
-function ImageUpload({
+type Props<T extends FieldValues> = {
+  name: Path<T>;
+  label: string;
+  hint?: string;
+  setValue: UseFormSetValue<T>;
+  value: File | null;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+};
+
+function ImageUpload<T extends FieldValues>({
+  name,
   label,
   hint,
-  preview,
+  value,
+  setValue,
   inputRef,
-  onChange,
-  onClear,
-}: {
-  label: string;
-  hint: string;
-  preview: string | null;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onClear: () => void;
-}) {
+}: Props<T>) {
+  const [preview, setPreview] = useState<string | null>(null);
+  useEffect(() => {
+    if (!value) {
+      setPreview(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(value);
+    setPreview(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [value]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Only image file allowed");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Max 10MB allowed");
+      return;
+    }
+
+    setValue(name, file as any, { shouldValidate: true });
+  };
+
+  const handleRemove = () => {
+    setValue(name, null as any);
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
   return (
     <Field label={label} hint={hint}>
       {preview ? (
         <div className="relative group rounded-xl overflow-hidden border border-white/10 aspect-video">
-          <img src={preview} alt="preview" className="w-full h-full object-cover" />
+          <img
+            src={preview}
+            alt="preview"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <button
               type="button"
-              onClick={onClear}
-              className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white text-xs rounded-full transition-colors"
+              onClick={handleRemove}
+              className="px-4 py-2 bg-red-500/80 border border-red-500 hover:bg-red-500 text-white text-xs rounded-full transition-colors"
             >
-              Remove
+              <X/>
             </button>
           </div>
         </div>
@@ -396,14 +511,32 @@ function ImageUpload({
           className="w-full aspect-video bg-white/[0.02] border border-dashed border-white/[0.12] hover:border-violet-500/40 hover:bg-white/[0.04] rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-200 group"
         >
           <div className="w-10 h-10 rounded-full bg-white/5 group-hover:bg-violet-500/10 flex items-center justify-center transition-colors">
-            <svg className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.338-2.32 5.25 5.25 0 011.886 7.67" />
+            <svg
+              className="w-5 h-5 text-zinc-600 group-hover:text-violet-400 transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.338-2.32 5.25 5.25 0 011.886 7.67"
+              />
             </svg>
           </div>
-          <span className="text-xs text-zinc-600 group-hover:text-zinc-400 transition-colors">Click to upload</span>
+          <span className="text-xs text-zinc-600 group-hover:text-zinc-400 transition-colors">
+            Click to upload
+          </span>
         </button>
       )}
-      <input ref={inputRef} type="file" accept="image/*" onChange={onChange} className="hidden" />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={onChange}
+        className="hidden"
+      />
     </Field>
   );
 }
