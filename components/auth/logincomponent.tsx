@@ -3,7 +3,6 @@
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { loginUser } from "@/lib/features/auth/authApi";
 import {
-  selectAuthLoading,
   selectAuth,
 } from "@/lib/features/auth/authSelectors";
 import { useForm } from "react-hook-form";
@@ -22,7 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginComponent() {
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectAuthLoading);
+  const {loading, token} = useAppSelector((state)=>state.auth);
   const { error } = useAppSelector(selectAuth);
   const router = useRouter();
 
@@ -35,7 +34,8 @@ export default function LoginComponent() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    await dispatch(loginUser(data));
+    const response  =  await dispatch(loginUser(data)).unwrap();
+    if(response.success)
     router.replace('/feed');
   };
 

@@ -1,9 +1,10 @@
 "use client";
 
 import axiosInstance from "@/utils/axiosIntance";
-import { X } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FieldValues, Path, useForm, UseFormSetValue } from "react-hook-form";
 
 const AI_MODELS = [
@@ -48,10 +49,6 @@ const sections = ["Core", "Prompt", "Media", "Meta"];
 export default function CreatePostForm() {
   const [activeSection, setActiveSection] = useState(0);
   const [tagInput, setTagInput] = useState("");
-  const [rawImagePreview, setRawImagePreview] = useState<string | null>(null);
-  const [promptImagePreview, setPromptImagePreview] = useState<string | null>(
-    null,
-  );
   const rawImageRef = useRef<HTMLInputElement | null>(null);
   const promptImageRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
@@ -139,6 +136,8 @@ export default function CreatePostForm() {
       </div>
 
       <div className="relative max-w-2xl mx-auto px-4 py-16">
+        <Link href={"/feed"} 
+         className="absolute -left-32  flex gap-2 rounded-full text-violet-400/70"><ArrowLeft/> Back </Link>
         <div className="mb-12">
           <span className="text-xs font-medium tracking-[0.2em] text-violet-400/70 uppercase mb-4 block">
             Prompt Gallery

@@ -26,7 +26,6 @@ export interface Post {
 
 interface PostCardProps {
   post: any ;
-//   post: Post ;
   onLike?: (postId: string) => void;
   onView?: (postId: string) => void;
 }

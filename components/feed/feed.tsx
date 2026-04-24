@@ -6,6 +6,9 @@ import FeedCard from "./feedcard";
 import { fetchFeed } from "@/lib/features/feed/feedAPi";
 import GenerateSearchToggle from "./genrateAndSearch";
 import SearchBar from "./searchbar";
+import { LogOut, User } from "lucide-react";
+import Link from "next/link";
+import Logout from "../auth/logout";
 
 export default function Feed() {
   const { feedData, loading, error } = useAppSelector((state) => state.feed);
@@ -21,7 +24,15 @@ export default function Feed() {
 
   return (
     <div className="py-6 px-6">
-      <div>
+      <div className=" relative">
+        <div className="absolute right-0 flex gap-4  p-1 ">
+          <div className="p-1 hover:bg-violet-400/30 rounded-full cursor-pointer">
+            <Link href={"/user/profile"}>
+              <User className=" hover:rounded-full text-violet-400" />
+            </Link>
+          </div>
+          <Logout/>
+        </div>
         <div className="flex justify-center mb-2">
           <GenerateSearchToggle />
         </div>
@@ -29,7 +40,6 @@ export default function Feed() {
           <SearchBar />
         </div>
         <div className="py-4">
-          
           <hr className=" border-zinc-700 my-4" />
           <div className="text-center -mt-7.5 ">feed</div>
         </div>

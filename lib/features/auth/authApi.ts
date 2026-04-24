@@ -8,8 +8,13 @@ interface LoginPayload {
 }
 
 interface LoginResponse {
-  user: User;
-  token: string;
+  success: Boolean;
+  message: string;
+}
+
+interface LogoutResponse{
+  success:boolean;
+  message:string;
 }
 
 export const registerUser = createAsyncThunk<
@@ -40,3 +45,12 @@ export const loginUser = createAsyncThunk<
     return rejectWithValue("Login failed");
   }
 });
+
+export const logoutUser = createAsyncThunk<LogoutResponse, void,{rejectValue:string}>("auth/logoutUser", async (Payload, {rejectWithValue})=>{
+  try {
+    const response  = await axiosInstance.post("/api/user/logout",Payload);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue("Logout Failed.")
+  }
+})
