@@ -13,10 +13,11 @@ export default function HomeNavbar() {
           <div>Category</div>
           <div>How it works</div>
         </div>
-        <button className="bg-[#C1C1C1] px-3 py-1 rounded-full text-black italic font-normal text-2xl">
-          <Link href={'/login'}>
-          Get Started</Link>
-        </button>
+        <div className="bg-linear-to-b from-[#C9C9C9] via-transparent to-[#414141] rounded-full p-px">
+          <button className="bg-linear-to-b from-[#ffffff]  to-[#999999] h-full px-3 py-1 rounded-full  text-black italic font-normal text-2xl">
+            <Link href={"/login"}>Get Started</Link>
+          </button>
+        </div>
       </div>
     </>
   );

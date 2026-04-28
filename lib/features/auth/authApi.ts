@@ -10,6 +10,7 @@ interface LoginPayload {
 interface LoginResponse {
   success: Boolean;
   message: string;
+  user:{}
 }
 
 interface LogoutResponse{

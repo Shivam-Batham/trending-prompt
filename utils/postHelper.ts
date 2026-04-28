@@ -21,4 +21,16 @@ function getInitials(name?: string): string {
   return name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 }
 
-export {formatCount,getInitials, timeAgo}
+function formatToLocalMonthYear(dateString: string): string {
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date string");
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+export {formatCount,getInitials, timeAgo, formatToLocalMonthYear}
