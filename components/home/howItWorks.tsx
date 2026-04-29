@@ -2,9 +2,9 @@ import { Search } from "lucide-react";
 
 export default function HowItWorks() {
   return (
-    <div className="bg-[#0C0C0C] px-4 lg:px-16 py-5">
+    <div id="how-it-works" className="bg-[#0C0C0C] px-4 lg:px-16 py-5">
       <div className="flex  flex-col lg:justify-center  lg:items-center">
-        <h1 className="text-[32px] italic">How It's Works</h1>
+        <h1  className="text-[32px] italic">How It's Works</h1>
         <p>Get started in seconds.</p>
       </div>
 

@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import StackCards from "../ui/stackCards";
 
 const loginSchema = z.object({
   name: z.string().min(1, "Name must be at least 1 character"),
@@ -128,8 +129,8 @@ export default function SignUpComponent() {
           </div>
         </div>
       </form>
-      <div className="hidden lg:flex bg-[#111111] text-white w-1/2 px-8.5">
-        <div className=""></div>
+      <div className="relative hidden lg:flex bg-[#111111] text-white w-1/2 px-8.5">
+        <div className=""> <StackCards/></div>
         <div className="self-end pb-6">
           <h1 className="font-normal text-6xl font-serif italic">
             Trending Prompt
@@ -140,6 +141,8 @@ export default function SignUpComponent() {
             Midjourney, coding, marketing, design, and more—all in one place.
           </p>
         </div>
+         <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
+         <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
       </div>
     </div>
   );

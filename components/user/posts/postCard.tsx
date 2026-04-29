@@ -1,3 +1,4 @@
+"use client";
 import modelColor from "@/components/ui/aiModalColor";
 import FeaturedRibbon from "@/components/ui/featuredRibbon";
 import VerifiedBadge from "@/components/ui/verifiedBadge";

@@ -1,10 +1,8 @@
-import UserPosts from "./posts";
+"use client";
 import UserData from "./userData";
 
 export default function UserProfile(){
-
     return (<div>
         <UserData />
-        {/* <UserPosts/> */}
     </div>)
 }

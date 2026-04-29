@@ -1,3 +1,4 @@
+"use client";
 import { logoutUser } from "@/lib/features/auth/authApi";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { LogOut } from "lucide-react";

@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import HomeTrending4cards from "../ui/homeTrending4cards";
+import Link from "next/link";
 
 export default function HeroSection() {
   const position = {
@@ -40,7 +41,7 @@ export default function HeroSection() {
       <HomeTrending4cards {...position} />
       <HomeTrending4cards {...position3} />
       <HomeTrending4cards {...position4} />
-      <div className="relative mx-auto h-full space-y-4 w-fit flex flex-col items-center justify-center">
+      <div className="z-50 relative mx-auto h-full space-y-4 w-fit flex flex-col items-center justify-center">
         <h1 className="italic text-[32px] lg:text-[64px] ">Trending Prompt</h1>
         <p className="text-sm lg:text-[20px] text-center">
           Community-curated prompts for captions, reels, hooks, and content
@@ -48,15 +49,15 @@ export default function HeroSection() {
           <br /> Discover what's trending and create content that engages.
         </p>
         <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
-          <div className="bg-linear-to-b from-[#979797] via-transparent to-[#424242] rounded-full p-px">
-            <button className="bg-linear-to-b from-[#272727]  to-[#414141] inset-0 px-4 py-2.5 rounded-full flex gap-2 ">
+          <div className="cursor-pointer bg-linear-to-b from-[#979797] via-transparent to-[#424242] rounded-full p-px">
+            <Link href={"/login"} className="bg-linear-to-b from-[#272727]  to-[#414141] inset-0 px-4 py-2.5 rounded-full flex gap-2 ">
               Explore Prompts <ArrowRight />
-            </button>
+            </Link>
           </div>
           <div className="bg-linear-to-b from-[#979797] via-transparent to-[#424242] rounded-full p-px">
-            <button className="bg-[#111111] px-10 py-2.5 rounded-full">
+            <Link href={"/user/posts/create-post"} className="bg-[#111111] px-10 py-2.5 rounded-full">
               Post a Prompt
-            </button>
+            </Link>
           </div>
         </div>
       </div>
