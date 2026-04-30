@@ -14,9 +14,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trending prompts for images",
+  title: "Trending AI Image Prompts | ChatGPT, Gemini, Grok",
   description:
-    "Trending prompts for AI image generation models like Gimini, ChatGpt and Grok",
+    "Discover trending AI image prompts for ChatGPT, Gemini, Grok and more.",
+  keywords: [
+    "AI prompts",
+    "image generation prompts",
+    "ChatGPT prompts",
+    "Top trending prompt",
+    "Gemini trending image prompt"
+  ],
+  openGraph: {
+    title: "Trending AI Prompts",
+    description: "Explore viral AI prompts",
+    url: "https://trending-prompts.vercel.app",
+    siteName: "AI Prompts Hub",
+    // images: [
+    //   {
+    //     url: "https://trending-prompts.vercel.app/og-image.png",
+    //     width: 1200,
+    //     height: 630,
+    //   },
+    // ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  alternates: {
+    canonical: "https://trending-prompts.vercel.app",
+  },
+  
 };
 
 export default function RootLayout({
