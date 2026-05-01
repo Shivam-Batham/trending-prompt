@@ -86,7 +86,6 @@ export default function CreatePostForm() {
 
  async function onSubmit(data: IpostFormData) {
   try {
-    console.log(data);
     const formData = new FormData();
 
     formData.append("title", data.title);
@@ -118,8 +117,10 @@ export default function CreatePostForm() {
         withCredentials:true
       }
     );
+    if(response.status == 201){
+      router.replace("/feed");
+    }
  
-    router.replace("feed");
   } catch (error) {
     console.error(error);
   }
@@ -264,7 +265,7 @@ export default function CreatePostForm() {
             <div className="space-y-5 animate-in fade-in duration-300">
               <ImageUpload
                 name="raw_image"
-                label="Raw Output Image"
+                label="Raw Input Image"
                 hint="Upload unedited output"
                 setValue={setValue}
                 value={watch("raw_image")}
@@ -272,7 +273,7 @@ export default function CreatePostForm() {
               />
               <ImageUpload
                 name="prompt_image"
-                label="Prompt Reference"
+                label="AI generated image"
                 hint="Optional"
                 setValue={setValue}
                 value={watch("prompt_image")}

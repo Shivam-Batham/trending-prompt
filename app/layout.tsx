@@ -24,20 +24,6 @@ export const metadata: Metadata = {
     "Top trending prompt",
     "Gemini trending image prompt"
   ],
-  openGraph: {
-    title: "Trending AI Prompts",
-    description: "Explore viral AI prompts",
-    url: "https://trending-prompts.vercel.app",
-    siteName: "AI Prompts Hub",
-    // images: [
-    //   {
-    //     url: "https://trending-prompts.vercel.app/og-image.png",
-    //     width: 1200,
-    //     height: 630,
-    //   },
-    // ],
-    type: "website",
-  },
   twitter: {
     card: "summary_large_image",
   },

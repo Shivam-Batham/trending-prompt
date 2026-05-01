@@ -10,7 +10,13 @@ interface LoginPayload {
 interface LoginResponse {
   success: Boolean;
   message: string;
-  user:{}
+  user:any
+}
+
+interface IregisterResponse {
+  success: Boolean;
+  message: string;
+  data:any
 }
 
 interface LogoutResponse{
@@ -19,7 +25,7 @@ interface LogoutResponse{
 }
 
 export const registerUser = createAsyncThunk<
-  {name:string, token:string,_id:string},
+  IregisterResponse,
   {name:string,email:string,password:string},
   { rejectValue: string }
 >("auth/registerUser", async (payload, { rejectWithValue }) => {

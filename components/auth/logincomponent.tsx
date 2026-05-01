@@ -23,7 +23,6 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginComponent() {
   const dispatch = useAppDispatch();
   const {loading, token} = useAppSelector((state)=>state.auth);
-  const { error } = useAppSelector(selectAuth);
   const router = useRouter();
 
   const {
@@ -37,7 +36,9 @@ export default function LoginComponent() {
   const onSubmit = async (data: LoginFormValues) => {
     const response  =  await dispatch(loginUser(data)).unwrap();
     if(response.success)
-    router.replace('/feed');
+    {
+      router.replace('/feed');
+    }
   };
 
   return (

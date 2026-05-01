@@ -37,8 +37,10 @@ export default function SignUpComponent() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    await dispatch(registerUser(data));
-    router.replace("/login");
+    const  res =  await dispatch(registerUser(data)).unwrap();
+    if(res.success){
+      router.replace("/login");
+    }
   };
 
   return (
