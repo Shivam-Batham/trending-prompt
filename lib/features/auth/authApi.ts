@@ -1,32 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { User } from "./authTypes";
 import axiosInstance from "@/utils/axiosIntance";
-
-interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  success: Boolean;
-  message: string;
-  user:any
-}
-
-interface IregisterResponse {
-  success: Boolean;
-  message: string;
-  data:any
-}
-
-interface LogoutResponse{
-  success:boolean;
-  message:string;
-}
+import { IauthMeResponse } from "@/types/auth";
+import {
+  IregisterResponse,
+  LoginPayload,
+  LoginResponse,
+  LogoutResponse,
+} from "./authTypes";
+import { AxiosError } from "axios";
 
 export const registerUser = createAsyncThunk<
   IregisterResponse,
-  {name:string,email:string,password:string},
+  { name: string; email: string; password: string },
   { rejectValue: string }
 >("auth/registerUser", async (payload, { rejectWithValue }) => {
   try {
@@ -38,14 +23,13 @@ export const registerUser = createAsyncThunk<
   }
 });
 
-
 export const loginUser = createAsyncThunk<
   LoginResponse,
   LoginPayload,
   { rejectValue: string }
 >("auth/loginUser", async (payload, { rejectWithValue }) => {
   try {
-    const res = await axiosInstance.post("/api/user/login", payload);
+    const res = await axiosInstance.post("/api/auth/login", payload);
 
     return res.data;
   } catch (err) {
@@ -53,11 +37,52 @@ export const loginUser = createAsyncThunk<
   }
 });
 
-export const logoutUser = createAsyncThunk<LogoutResponse, void,{rejectValue:string}>("auth/logoutUser", async (Payload, {rejectWithValue})=>{
+export const logoutUser = createAsyncThunk<
+  LogoutResponse,
+  void,
+  { rejectValue: string }
+>("auth/logoutUser", async (Payload, { rejectWithValue }) => {
   try {
-    const response  = await axiosInstance.post("/api/user/logout",Payload);
+    const response = await axiosInstance.post("/api/auth/logout", Payload);
     return response.data;
   } catch (error) {
-    return rejectWithValue("Logout Failed.")
+    return rejectWithValue("Logout Failed.");
   }
-})
+});
+
+export const currentUser = createAsyncThunk<IauthMeResponse, void, {rejectValue:{message:string}}>(
+  "auth/me",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get("/api/auth/me");
+      return response.data;
+    } catch (error: any) {
+      const err = error as AxiosError<{ message: string }>;
+
+      return thunkAPI.rejectWithValue(
+       { message: err.response?.data?.message || "Something went wrong",}
+      );
+    }
+  },
+);
+
+export const refreshSession = createAsyncThunk(
+  "auth/refreshSession",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.post(
+        "/api/auth/refresh",
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        message: error.response.data.message,
+      });
+    }
+  },
+);

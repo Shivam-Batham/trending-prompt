@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import AuthBootstrap from "@/components/auth/AuthBootstrap";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     "image generation prompts",
     "ChatGPT prompts",
     "Top trending prompt",
-    "Gemini trending image prompt"
+    "Gemini trending image prompt",
   ],
   twitter: {
     card: "summary_large_image",
@@ -30,7 +31,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://trending-prompts.vercel.app",
   },
-  
 };
 
 export default function RootLayout({
@@ -43,7 +43,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <AuthBootstrap />
+          {children}</StoreProvider>
       </body>
     </html>
   );

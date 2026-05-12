@@ -1,10 +1,8 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { loginUser } from "@/lib/features/auth/authApi";
-import {
-  selectAuth,
-} from "@/lib/features/auth/authSelectors";
+import { currentUser, loginUser } from "@/lib/features/auth/authApi";
+import { selectAuth } from "@/lib/features/auth/authSelectors";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import StackCards from "../ui/stackCards";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -22,7 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginComponent() {
   const dispatch = useAppDispatch();
-  const {loading, token} = useAppSelector((state)=>state.auth);
+  const { loading, status } = useAppSelector((state) => state.auth);
   const router = useRouter();
 
   const {
@@ -34,37 +33,36 @@ export default function LoginComponent() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    const response  =  await dispatch(loginUser(data)).unwrap();
-    if(response.success)
-    {
-      router.replace('/feed');
-    }
+    await dispatch(loginUser(data));
   };
+  
+  useEffect( () => {
+    if (status === "authenticated") {
+      router.replace("/feed");
+      dispatch(currentUser());
+    }
+  }, [status, router]);
 
   return (
     <div className=" h-full flex flex-1">
       <div className="relative  w-1/2 hidden lg:flex bg-[#111111] text-white  px-8.5 ">
-          <div className="">
-            <StackCards />
-          </div>
-          <div className="self-end pb-6">
-            <h1 className="font-normal text-6xl font-serif italic">
-              Trending Prompt
-            </h1>
-            <p>
-              Discover trending AI prompts crafted to boost creativity,
-              productivity, and results. Explore ready-to-use prompts for
-              ChatGPT, Midjourney, coding, marketing, design, and more — all in
-              one place.
-            </p>
-          </div>
-          <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
-          <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
+        <div className="">
+          <StackCards />
         </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="lg:w-1/2  text-black"
-      >
+        <div className="self-end pb-6">
+          <h1 className="font-normal text-6xl font-serif italic">
+            Trending Prompt
+          </h1>
+          <p>
+            Discover trending AI prompts crafted to boost creativity,
+            productivity, and results. Explore ready-to-use prompts for ChatGPT,
+            Midjourney, coding, marketing, design, and more — all in one place.
+          </p>
+        </div>
+        <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
+        <div className=" -mx-8.5 absolute h-full w-full p-0  bg-linear-to-t from-[#111111]/10 via-[#c4c3c3]/10 to-[#111111]/40"></div>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="lg:w-1/2  text-black">
         <div className="h-screen  px-3 flex flex-col justify-center lg:px-10 space-y-2 bg-white shadow-md">
           <div>
             <h2 className="font-medium text-5xl lg:text-6xl font-serif italic leading-[100%] tracking-tight mb-2">
@@ -80,8 +78,7 @@ export default function LoginComponent() {
 
           <div className="bg-[#D9D9D9] h-10 flex items-center justify-center rounded-full  text-black text-center">
             <div className="flex justify-center items-center gap-2">
-               <FcGoogle size={20} /> Continue
-              with Google
+              <FcGoogle size={20} /> Continue with Google
             </div>
           </div>
 
@@ -132,12 +129,10 @@ export default function LoginComponent() {
             {loading ? "Logging in..." : "Login"}
           </button>
           <div className="flex justify-between text-xs lg:text-sm py-4">
-            <Link href={'/register'}>Don’t have an Account ? Sign up</Link>
-            <Link href={'/forgot-password'}>forgot password?</Link>
+            <Link href={"/register"}>Don’t have an Account ? Sign up</Link>
+            <Link href={"/forgot-password"}>forgot password?</Link>
           </div>
         </div>
-
-        
       </form>
     </div>
   );
