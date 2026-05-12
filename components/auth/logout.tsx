@@ -5,12 +5,12 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Logout() {
-  const { token, } = useAppSelector((state) => state.auth);
+  const { status } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const handleLogout = () => {
     dispatch(logoutUser());
-    if (!token) router.replace("/");
+    if (status === "idle") router.replace("/");
   };
 
   return (
