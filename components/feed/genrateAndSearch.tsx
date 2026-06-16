@@ -40,7 +40,7 @@ export const SearchIcon = () => (
 
 const tabs = [
   { id: "generate", label: "Generate", Icon: SparkleIcon },
-  { id: "search", label: "Search", Icon: SearchIcon },
+  { id: "search", label: "Feed", Icon: SearchIcon },
 ];
 
 export default function GenerateSearchToggle() {

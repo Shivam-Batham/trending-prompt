@@ -203,7 +203,7 @@ export default function FeedCard({ post }: { post: Post }) {
         <div className="h-px bg-white/[0.05] -mx-4" />
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0 ring-1 ring-white/10">
               {getInitials(post.author)}
             </div>
@@ -217,10 +217,10 @@ export default function FeedCard({ post }: { post: Post }) {
             <span className="text-[10px] text-white/25">
               {timeAgo(post.createdAt)}
             </span>
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-white/30">
+            {/* <div className="flex items-center gap-1 text-white/30">
               <svg
                 className="w-3.5 h-3.5"
                 viewBox="0 0 24 24"
@@ -234,9 +234,9 @@ export default function FeedCard({ post }: { post: Post }) {
               <span className="text-[11px] tabular-nums">
                 {formatCount(post.views ?? 0)}
               </span>
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleLike();
@@ -258,7 +258,7 @@ export default function FeedCard({ post }: { post: Post }) {
               <span className="text-[11px] tabular-nums">
                 {formatCount(likeCount)}
               </span>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -36,15 +36,15 @@ export default function Feed() {
         <div className="flex justify-center mb-2">
           <GenerateSearchToggle />
         </div>
-        <div>
-          <SearchBar />
+        <div className="py-2 border-t">
+          {/* <SearchBar /> */}
         </div>
-        <div className="py-4">
+        {/* <div className="py-4">
           <hr className=" border-zinc-700 my-4" />
           <div className="text-center -mt-7.5 ">feed</div>
-        </div>
+        </div> */}
         <div
-          className="max-w-2xl mx-auto "
+          className=" max-w-2xl mx-auto "
           style={{ display: "flex", flexDirection: "column", gap: "12px" }}
         >
           {feedData.map((post) => (

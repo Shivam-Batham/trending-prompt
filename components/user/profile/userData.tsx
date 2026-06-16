@@ -5,22 +5,23 @@ import { fetchUser } from "@/lib/features/user/userApi";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { formatToLocalMonthYear } from "@/utils/postHelper";
 import { useEffect } from "react";
+import { EditProfile } from "./editprofileDailog";
 
 export default function UserData() {
   const { user, error, loading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if(!user){
-        dispatch(fetchUser());
+    if (!user) {
+      dispatch(fetchUser());
     }
-  }, [dispatch,user]);
+  }, [dispatch, user]);
 
-  if(loading){
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  if(error){
-    return <div>Something went wrong.</div>
+  if (error) {
+    return <div>Something went wrong.</div>;
   }
 
   return (
@@ -35,21 +36,19 @@ export default function UserData() {
             <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-white dark:ring-zinc-950 overflow-hidden bg-zinc-200 dark:bg-zinc-700 shadow-lg">
               {user && user?.avatar ? (
                 <img
-                  src={user.avatar}
-                  alt={user?.name || "User avatar"}
+                  src={user.avatar.url}
+                  alt={"User"}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-zinc-500 dark:text-zinc-300">
-                  {user?.name && user?.name.charAt(0).toUpperCase() || "user"}
+                  {(user?.name && user?.name.charAt(0).toUpperCase()) || "user"}
                 </div>
               )}
             </div>
           </div>
 
-          <button className="mt-20 sm:mt-24 px-5 py-2 rounded-full text-sm font-semibold bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors shadow-sm">
-            Follow
-          </button>
+          <EditProfile />
         </div>
 
         <div className="space-y-1 mb-3">
@@ -110,9 +109,7 @@ export default function UserData() {
 
         {/* Stats */}
         <div className="flex items-center gap-6 pb-4 border-b border-zinc-200 dark:border-zinc-800">
-          <StatPill label="Posts" value={1} />
-          <StatPill label="Followers" value={1} />
-          <StatPill label="Following" value={0} />
+          <StatPill label="Posts" value={user?.postCount || 0} />
         </div>
       </div>
     </div>

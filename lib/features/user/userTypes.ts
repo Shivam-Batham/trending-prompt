@@ -9,9 +9,13 @@ export interface User {
   isActive: boolean | null;
   isVerified: boolean | null;
   lastLogin: string | null;
-  avatar: string | null;
+  avatar: {public_id :string,
+    url:string
+  } | null;
   bookmarks: [] | null;
   createdAt:string | null;
+  _id?:string;
+  postCount?:number;
 }
 
 export interface UserState {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { FieldValues, Path, useForm, UseFormSetValue } from "react-hook-form";
+import { toast } from "sonner";
 
 const AI_MODELS = [
   "GPT-4o",
@@ -117,12 +118,15 @@ export default function CreatePostForm() {
         withCredentials:true
       }
     );
+
+    toast("Post created.")
+
     if(response.status == 201){
       router.replace("/feed");
     }
  
   } catch (error) {
-    console.error(error);
+     toast("Post creation failed.")
   }
 }
 
@@ -205,7 +209,7 @@ export default function CreatePostForm() {
 
               <Field label="Status">
                 <div className="flex gap-2">
-                  {(["draft", "active"] as PostStatus[]).map((s) => (
+                  {([ "active"] as PostStatus[]).map((s) => (
                     <button
                       key={s}
                       type="button"

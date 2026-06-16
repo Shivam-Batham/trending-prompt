@@ -10,7 +10,7 @@ export default function Logout() {
   const router = useRouter();
   const handleLogout = () => {
     dispatch(logoutUser());
-    if (status === "idle") router.replace("/");
+    router.replace("/");
   };
 
   return (

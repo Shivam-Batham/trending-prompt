@@ -9,11 +9,11 @@ export default function AuthBootstrap(){
     const initialRender =  useRef(false);
     useEffect(()=>{
         if(initialRender.current == false && status === "idle"){
-            console.log(initialRender.current)
-            initialRender.current =  true
+            initialRender.current =  true;
             dispatch(refreshSession());
         }
-    },[status,initialRender])
+    },[])
+    // },[status,initialRender])
 
     return null;
 }

@@ -8,6 +8,7 @@ import {
   LogoutResponse,
 } from "./authTypes";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export const registerUser = createAsyncThunk<
   IregisterResponse,
@@ -16,9 +17,10 @@ export const registerUser = createAsyncThunk<
 >("auth/registerUser", async (payload, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.post("/api/user/create-user", payload);
-
+    toast("User registration succesfull.")
     return res.data;
   } catch (err) {
+    toast("User registration failed.")
     return rejectWithValue("Login failed");
   }
 });
@@ -30,10 +32,11 @@ export const loginUser = createAsyncThunk<
 >("auth/loginUser", async (payload, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.post("/api/auth/login", payload);
-
+    toast("Login succesfull.")
     return res.data;
   } catch (err) {
-    return rejectWithValue("Login failed");
+    toast("Login failed.")
+    return rejectWithValue("Login failed.");
   }
 });
 
@@ -44,8 +47,10 @@ export const logoutUser = createAsyncThunk<
 >("auth/logoutUser", async (Payload, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.post("/api/auth/logout", Payload);
+    toast("Logout succesfull.")
     return response.data;
   } catch (error) {
+    toast("Logout Failed.")
     return rejectWithValue("Logout Failed.");
   }
 });

@@ -66,7 +66,7 @@ export default function SignUpComponent() {
             </p>
           </div>
 
-          <div className="bg-[#D9D9D9] h-10 flex items-center justify-center rounded-full  text-black text-center">
+          {/* <div className="bg-[#D9D9D9] h-10 flex items-center justify-center rounded-full  text-black text-center">
             <div className="flex justify-center items-center gap-2">
               <FcGoogle size={20} /> Continue with Google
             </div>
@@ -77,7 +77,7 @@ export default function SignUpComponent() {
             <div className="absolute top-0 p-1 bottom-0 bg-white rounded-full ">
               OR
             </div>
-          </div>
+          </div> */}
 
           <div className="mb-4 ">
             <label className="block text-black mb-1 text-sm font-medium">
